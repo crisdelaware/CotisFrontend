@@ -5,8 +5,12 @@ import { ProfileComponent } from './components/profile/profile.component';
 
 const routes: Routes = [
   // Otras rutas...
-  { path: 'login', component: LoginComponent },
-  { path: 'profile', component: ProfileComponent },
+  { path: '',
+    children: [
+      { path: 'login', component: LoginComponent },
+      { path: 'profile', component: ProfileComponent },
+      { path: '**', redirectTo: 'login' },
+    ]}
   // Otras rutas...
 ];
 

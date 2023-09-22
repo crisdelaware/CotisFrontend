@@ -10,6 +10,8 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent {
   loginForm: FormGroup
+  errorMessage: string | null = null;
+
 
   constructor(private formBuilder: FormBuilder, private authService: AuthService, private router: Router) {
     this.loginForm = this.formBuilder.group({
@@ -26,8 +28,20 @@ export class LoginComponent {
         console.log(response);
         this.router.navigate(['/profile']);
       } catch (error) {
-        console.error(error);
+
+        // Depuracion ver objeto de error
+        console.log(error);
+
+        // Afirmación de tipo para 'error' (asegúrate de que coincida con la estructura esperada)
+        const errorWithMessage = error as { error: { message: string } } | undefined;
+
+        if (errorWithMessage && errorWithMessage.error && errorWithMessage.error.message) {
+          this.errorMessage = errorWithMessage.error.message;
+          } else {
+            this.errorMessage = 'Error desconocido del servidor';
+        }
       }
     }
   }
 }
+

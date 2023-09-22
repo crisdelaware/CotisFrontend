@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { Observable, tap, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 
 @Injectable({
@@ -53,7 +54,7 @@ export class AuthService {
           localStorage.setItem('token', this.authToken || '');
         }
       })
-    );
+    )
   }
 
   logout(): void {
