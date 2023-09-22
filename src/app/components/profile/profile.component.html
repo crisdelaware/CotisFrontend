@@ -1,0 +1,10 @@
+<div>
+  <h2>Mi Perfil</h2>
+  <p><strong>Nombre:</strong> {{ user.userProfile?.username }}</p>
+  <p><strong>Correo Electrónico:</strong> {{ user.userProfile?.email }}</p>
+
+  <button (click)="logout()">Cerrar sesión</button>
+
+  <pre> {{ user | json }} </pre>
+  <!-- Otros detalles del perfil -->
+</div>
