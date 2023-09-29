@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Observable, tap, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
@@ -56,6 +56,11 @@ export class AuthService {
       })
     )
   }
+  register(username: string, email: string, fullName: string, shippingAddress: string, phoneNumber: number, password: string): Observable<any> {
+    const body = { username, email, fullName, shippingAddress, phoneNumber, password };
+    return this.http.post(`${this.apiUrl}/users/create`, body)
+  }
+
 
   logout(): void {
     // Elimina el token almacenado en el Local Storage
