@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/services/auth.service';
 import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-login',
@@ -36,9 +37,17 @@ export class LoginComponent {
         const errorWithMessage = error as { error: { message: string } } | undefined;
 
         if (errorWithMessage && errorWithMessage.error && errorWithMessage.error.message) {
-          this.errorMessage = errorWithMessage.error.message;
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: this.errorMessage = errorWithMessage.error.message
+          });
           } else {
-            this.errorMessage = 'Error desconocido del servidor';
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: this.errorMessage = 'Error desconocido del servidor'
+            });
         }
       }
     }

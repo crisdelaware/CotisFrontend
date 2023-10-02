@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
 import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-profile',
@@ -28,7 +29,19 @@ export class ProfileComponent implements OnInit {
   }
 
   logout(): void {
-    this.authService.logout(); // Llama a la función de logout en el servicio de autenticación
-    this.router.navigate(['login']); // Redirige al usuario a la página de inicio de sesión
+    Swal.fire({
+      icon: 'question',
+      title: 'Deseas cerrar sesion?',
+      showCancelButton: true,
+      confirmButtonText: 'Aceptar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      console.log(result);
+      if (result.isConfirmed) {
+        Swal.fire('Hasta pronto!', '' , 'success')
+        this.authService.logout(); // Llama a la función de logout en el servicio de autenticación
+        this.router.navigate(['login']); // Redirige al usuario a la página de inicio de sesión
+      }
+    });
   }
 }

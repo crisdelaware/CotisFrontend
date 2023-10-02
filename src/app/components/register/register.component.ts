@@ -15,7 +15,8 @@ export class RegisterComponent {
   registerForm: FormGroup
   errorMessage: string | null = null;
 
-  constructor(private formBuilder: FormBuilder, private authService: AuthService, private router: Router, ) {
+  constructor(private formBuilder: FormBuilder, private authService: AuthService,
+              private router: Router,  ) {
     this.registerForm = this.formBuilder.group({
       username: ['', [Validators.required, Validators.minLength(5)]],
       email: ['', [Validators.required, Validators.email]],
@@ -28,6 +29,7 @@ export class RegisterComponent {
   async onSubmit() {
     if (this.registerForm.valid) {
       try {
+        // this.spinner.show();
         const { username, email, fullName, shippingAddress, phoneNumber, password } = this.registerForm.value;
         const response = await this.authService.register(username, email, fullName, shippingAddress, phoneNumber, password).toPromise();
          // Muestra una alerta de éxito
