@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { Observable, tap, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
-
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -10,64 +8,68 @@ import { catchError } from 'rxjs/operators';
 export class AuthService {
   private apiUrl = 'http://localhost:3000';
   private authToken: string | null = null;  // Variable para almacenar el token
+  private isAuthenticated = false;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    this.loadTokenFromLocalStorage();
+  }
 
-
-  // Funcion para obtener token actual
-  getToken(): string | null {
-    if(!this.authToken) {
-      // Intenta obtener el token desde el servicio si no esta almacenado en la variable
-      this.authToken = localStorage.getItem('token');
+  private loadTokenFromLocalStorage(): void {
+    const token = localStorage.getItem('token');
+    if (token) {
+      this.authToken = token;
+      this.isAuthenticated = true;
     }
+  }
+
+  public getToken(): string | null {
     return this.authToken;
   }
 
-  // Funcion para agregar el token a las solicitudes HTTP
-  addTokenToHeaders(headers: HttpHeaders): HttpHeaders {
+  public setToken(token: string): void {
+    this.authToken = token;
+    localStorage.setItem('token', token);
+    this.isAuthenticated = true;
+  }
+
+  public addTokenToHeaders(headers: HttpHeaders): HttpHeaders {
     const token = this.getToken();
-    if(token) {
+    if (token) {
       return headers.set('x-auth-token', token);
     }
     return headers;
   }
 
-  // Funcion para obtener los datos del usuario autenticado
-  getUserProfile(): Observable<any> {
-    // Crear encabezados que incluyan el token
+  public getUserProfile(): Observable<any> {
     const headers = new HttpHeaders();
     const headersWithToken = this.addTokenToHeaders(headers);
 
-    // Realizar la solicitud HTTP con los encabezados a la ruta correcta
     return this.http.get(`${this.apiUrl}/users/profile`, { headers: headersWithToken });
   }
 
-  // Función para realizar la solicitud de inicio de sesión al servidor
-  login(email: string, password: string): Observable<any> {
+  public login(email: string, password: string): Observable<any> {
     const body = { email, password };
     return this.http.post(`${this.apiUrl}/auth/login`, body).pipe(
-      // Manejar la respuesta del servidor para obtener el token
       tap((response: any) => {
         if (response.token) {
-          this.authToken = response.token;
-          // Almacenar el token en el Local Storage para persistencia
-          localStorage.setItem('token', this.authToken || '');
+          this.setToken(response.token);
         }
       })
-    )
+    );
   }
-  register(username: string, email: string, fullName: string, shippingAddress: string, phoneNumber: number, password: string): Observable<any> {
+
+  public register(username: string, email: string, fullName: string, shippingAddress: string, phoneNumber: number, password: string): Observable<any> {
     const body = { username, email, fullName, shippingAddress, phoneNumber, password };
-    return this.http.post(`${this.apiUrl}/users/create`, body)
+    return this.http.post(`${this.apiUrl}/users/create`, body);
   }
 
+  public isLoggedIn(): boolean {
+    return this.isAuthenticated;
+  }
 
-  logout(): void {
-    // Elimina el token almacenado en el Local Storage
+  public logout(): void {
     localStorage.removeItem('token');
-
-    // Realiza cualquier otra limpieza necesaria, como limpiar el estado del usuario
+    this.authToken = null;
+    this.isAuthenticated = false;
   }
-
-
 }

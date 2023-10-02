@@ -13,35 +13,51 @@ export class ProfileComponent implements OnInit {
 
   constructor(private authService: AuthService, private router: Router) {}
 
-
-
   ngOnInit(): void {
+    if (!this.authService.isLoggedIn()) {
+      this.redirectToLogin();
+    } else {
+      this.loadUserProfile();
+    }
+  }
 
+  private redirectToLogin(): void {
+    this.router.navigate(['login']);
+  }
+
+  private loadUserProfile(): void {
     this.authService.getUserProfile().subscribe(
       (data) => {
-        // El servicio ha devuelto los datos del usuario
-        this.user = data
-
-        console.log(data);
-      }, (error) => {
-        console.error(error);
-      });
+        this.user = data;
+        console.log('User data:', data);
+      },
+      (error) => {
+        console.error('Error loading user profile:', error);
+      }
+    );
   }
 
   logout(): void {
-    Swal.fire({
+    this.showLogoutConfirmation().then((result) => {
+      if (result.isConfirmed) {
+        this.performLogout();
+      }
+    });
+  }
+
+  private showLogoutConfirmation(): Promise<any> {
+    return Swal.fire({
       icon: 'question',
-      title: 'Deseas cerrar sesion?',
+      title: 'Deseas cerrar sesión?',
       showCancelButton: true,
       confirmButtonText: 'Aceptar',
       cancelButtonText: 'Cancelar'
-    }).then((result) => {
-      console.log(result);
-      if (result.isConfirmed) {
-        Swal.fire('Hasta pronto!', '' , 'success')
-        this.authService.logout(); // Llama a la función de logout en el servicio de autenticación
-        this.router.navigate(['login']); // Redirige al usuario a la página de inicio de sesión
-      }
     });
+  }
+
+  private performLogout(): void {
+    Swal.fire('Hasta pronto!', '', 'success');
+    this.authService.logout();
+    this.redirectToLogin();
   }
 }
