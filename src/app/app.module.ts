@@ -10,6 +10,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { ProfileComponent } from './components/profile/profile.component';
 import { RegisterComponent } from './components/register/register.component';
 import { CommonModule } from '@angular/common';
+import { CotizadorComponent } from './components/cotizador/cotizador.component';
 
 
 @NgModule({
@@ -17,7 +18,8 @@ import { CommonModule } from '@angular/common';
     AppComponent,
     LoginComponent,
     ProfileComponent,
-    RegisterComponent
+    RegisterComponent,
+    CotizadorComponent
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,118 @@
+<div class="container mt-4">
+  <div class="row">
+    <div class="col">
+      <div class="p-4 bg-light rounded">
+        <h2 class="mb-4">Cotizador por Flete</h2>
+        <form [formGroup]="cotizadorForm" (ngSubmit)="calcularSubtotal()">
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="cliente" class="form-label">Cliente</label>
+                <input type="text" id="cliente" class="form-control" formControlName="cliente" required>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="tipoUnidad" class="form-label">Tipo de unidad</label>
+                <select id="tipoUnidad" class="form-select" formControlName="tipoUnidad" (change)="onTipoUnidadChange()">
+                  <option value="3.5 TON">3.5 TON</option>
+                  <option value="RABON">RABON</option>
+                  <option value="CAJA 53 FT">CAJA 53 FT</option>
+                  <option value="PLATAFORMA 48 FT">PLATAFORMA 48 FT</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="origen" class="form-label">Origen</label>
+                <input type="text" id="origen" class="form-control" formControlName="origen" required>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="destino" class="form-label">Destino</label>
+                <input type="text" id="destino" class="form-control" formControlName="destino" required>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="kms" class="form-label">Kilometros</label>
+                <input type="number" id="kms" class="form-control" formControlName="kms" (change)="calcularLitrosConsumidos()" required>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="rendimiento" class="form-label">Rendimiento</label>
+                <input type="number" id="rendimiento" class="form-control" formControlName="rendimiento" required readonly>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="ltsConsumidos" class="form-label">Litros consumidos</label>
+                <input type="number" id="ltsConsumidos" class="form-control" formControlName="ltsConsumidos" readonly>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="precioOficial" class="form-label">Precio Oficial</label>
+                <input type="number" id="precioOficial" class="form-control" formControlName="precioOficial" (change)="calcularCostoCombustible()" required>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="costoBase" class="form-label">Costo Base</label>
+                <input type="number" id="costoBase" class="form-control" formControlName="costoBase" required>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="costoDiesel" class="form-label">Costo Combustible</label>
+                <input type="number" id="costoDiesel" class="form-control" formControlName="costoDiesel" required readonly>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="form-label">Tipo de Movimiento</label>
+                <div class="form-check">
+                  <input type="radio" class="form-check-input" id="tipoMovimientoSencillo" name="tipoMovimiento" value="Sencillo" formControlName="tipoMovimiento">
+                  <label class="form-check-label" for="tipoMovimientoSencillo">Sencillo</label>
+                </div>
+                <div class="form-check">
+                  <input type="radio" class="form-check-input" id="tipoMovimientoRedondo" name="tipoMovimiento" value="Redondo" formControlName="tipoMovimiento">
+                  <label class="form-check-label" for="tipoMovimientoRedondo">Redondo</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="costoPeaje" class="form-label">Peajes</label>
+                <input type="number" id="costoPeaje" class="form-control" formControlName="costoPeaje" required>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <button type="submit" class="btn btn-primary form-control">Calcular Cotización</button>
+            </div>
+            <div *ngIf="mostrarGuardarBoton" class="col-md-4">
+              <button type="button" class="btn btn-success form-control">Guardar Cotización</button>
+            </div>
+          </div>
+
+          <strong class="mt-4">Subtotal: {{ formatCurrency(cotizadorForm.get('subtotal')?.value) }}</strong>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
